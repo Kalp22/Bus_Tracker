@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { Icon } from "leaflet";
@@ -19,6 +19,14 @@ export default function Map({ location }: Props) {
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  // openPopup (marker) {
+  //   if (marker && marker.busMarker) {
+  //     window.setTimeout(() => {
+  //       marker.leafletElement.openPopup()
+  //     })
+  //   }
+  // }
 
   const icon = new Icon({
     iconUrl:
@@ -49,6 +57,9 @@ export default function Map({ location }: Props) {
             <Popup>You</Popup>
           </Marker>
         )}
+        <Marker icon={icon} position={[21.022876, 79.05056]}>
+          <Popup>Bus 1</Popup>
+        </Marker>
       </MapContainer>
     )
   );
