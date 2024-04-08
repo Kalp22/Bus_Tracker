@@ -20,14 +20,6 @@ export default function Map({ location }: Props) {
     setIsMounted(true);
   }, []);
 
-  // openPopup (marker) {
-  //   if (marker && marker.busMarker) {
-  //     window.setTimeout(() => {
-  //       marker.leafletElement.openPopup()
-  //     })
-  //   }
-  // }
-
   const icon = new Icon({
     iconUrl:
       "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-512.png",
@@ -57,7 +49,7 @@ export default function Map({ location }: Props) {
             <Popup>You</Popup>
           </Marker>
         )}
-        <Marker icon={icon} position={[21.022876, 79.05056]}>
+        <Marker icon={icon} position={[-23.6345, -102.5528]}>
           <Popup>Bus 1</Popup>
         </Marker>
       </MapContainer>
