@@ -1,7 +1,17 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { Icon } from "leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  Polyline,
+} from "react-leaflet";
+import "leaflet-routing-machine";
+
+import { Icon, LatLngExpression } from "leaflet";
+
+import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import "leaflet/dist/leaflet.css";
 
 interface CurrentLocation {
@@ -15,10 +25,39 @@ interface Props {
 
 export default function Map({ location }: Props) {
   const [isMounted, setIsMounted] = useState(false);
+  const [busRoute, setBusRoute] = useState<LatLngExpression[]>([]);
+  const [stopNames, setStopNames] = useState<string[]>([]);
+  const busRouteCoordinates: LatLngExpression[] = [
+    [21.1509, 79.10293], // Agrasen Square
+    [21.1496, 79.1093], // Gandhi Putla Square
+    [21.149, 79.1144], // Azamshah Square
+    [21.14865, 79.12], // Telephone Exchange Square
+    [21.14261, 79.119707], // Gangabai Ghat Square
+    [21.13836, 79.119657], // Jagnade Square
+  ];
+
+  const busStopNames = [
+    "Agrasen Square",
+    "Gandhi Putla Square",
+    "Azamshah Square",
+    "Telephone Exchange Square",
+    "Gangabai Ghat Square",
+    "Jagnade Square",
+  ];
 
   useEffect(() => {
     setIsMounted(true);
+    setBusRoute(busRouteCoordinates);
+    setStopNames(busStopNames);
   }, []);
+
+  const busStop = new Icon({
+    iconUrl: "/Blue_circle.png",
+    iconSize: [17, 17],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -32],
+    shadowSize: [31, 31],
+  });
 
   const icon = new Icon({
     iconUrl:
@@ -49,9 +88,12 @@ export default function Map({ location }: Props) {
             <Popup>You</Popup>
           </Marker>
         )}
-        <Marker icon={icon} position={[-23.6345, -102.5528]}>
-          <Popup>Bus 1</Popup>
-        </Marker>
+        {busRouteCoordinates.map((bStop, i) => (
+          <Marker key={i} icon={busStop} position={bStop}>
+            <Popup>{stopNames[i]}</Popup>
+          </Marker>
+        ))}
+        <Polyline positions={busRoute} color="blue" />
       </MapContainer>
     )
   );

@@ -66,8 +66,8 @@ export default function Live() {
               2
             )}°E`
           ) : (
-            <div className="flex flex-row gap-2">
-              <Spinner size={6} />
+            <div className="flex flex-row gap-3">
+              <Spinner size={6} color={"blue-500"} border={4} />
               <p>Loading...</p>
             </div>
           )}
