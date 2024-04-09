@@ -1,59 +1,113 @@
 "use client";
 
 import Image from "next/image";
-
 import { useState } from "react";
+
+import Spinner from "@/components/loading/spinner";
 
 export default function SignInSignUp() {
   const [toSignUp, settoSignUp] = useState(true);
   const [form, setForm] = useState({ email: "", password: "" });
+  const [emailFocus, setEmailFocus] = useState(false);
+  const [passwordFocus, setPasswordFocus] = useState(false);
+  const [transitioning, setTransitioning] = useState(false);
+
+  const toggleSignUp = () => {
+    setTransitioning(true);
+    setTimeout(() => {
+      settoSignUp(!toSignUp);
+      setTransitioning(false);
+    }, 500);
+  };
 
   return (
     <main
-      className={`flex ${
-        toSignUp ? "flex-row" : "flex-row-reverse"
+      className={`flex ${toSignUp ? "flex-row" : "flex-row-reverse"} ${
+        transitioning ? "pointer-events-none" : ""
       } w-screen h-screen`}
     >
       <div
-        className=" w-1/2 cursor-pointer"
-        onClick={() => settoSignUp(!toSignUp)}
+        className={`w-1/2 relative cursor-pointer z-10 ${
+          transitioning && toSignUp ? "translate-x-[57dvw]" : ""
+        } ${transitioning && !toSignUp ? "-translate-x-[57dvw]" : ""}
+        ${transitioning ? `transition-all duration-500 ease-out` : ""}`}
+        onClick={toggleSignUp}
       >
-        <picture>
-          <Image
-            alt="City Map"
-            width={1000}
-            height={1000}
-            className={` h-screen object-cover ${
-              toSignUp ? "rounded-e-2xl" : "rounded-s-2xl"
-            }`}
-            src="/map_city.jpg"
-          />{" "}
-        </picture>
+        <Image
+          alt="City Map"
+          width={1000}
+          height={1000}
+          className={`h-screen object-cover rounded-${
+            toSignUp ? "e" : "s"
+          }-2xl`}
+          src="/map_city.jpg"
+        />
+        <div
+          className={`flex absolute inset-0 flex-col justify-center items-center`}
+        >
+          <h2 className="text-2xl font-semibold">
+            {toSignUp ? "Already have an account?" : "No account?"}
+          </h2>
+          <h1 className="text-4xl font-semibold">
+            {toSignUp ? "Log In" : "Create Account"}
+          </h1>
+        </div>
+        <div className="flex absolute inset-0 backdrop-filter backdrop-blur-sm justify-center items-center">
+          <div className="flex flex-col justify-center items-center">
+            <h2 className="text-white text-2xl font-semibold">
+              {toSignUp ? "Already have an account?" : "No account?"}
+            </h2>
+            <div className="h-px w-full bg-white"></div>
+            <h1 className="text-white text-4xl font-semibold">
+              {toSignUp ? "Log In" : "Create Account"}
+            </h1>
+          </div>
+        </div>
       </div>
-      <div className=" flex flex-col w-2/3 items-center py-60">
-        <h1 className=" text-4xl mb-24">
-          {toSignUp ? <>Sign Up</> : <>Sign In</>}
+      <div className="flex flex-col w-2/3 items-center py-60 bg-[e4e7e8]">
+        <h1 className=" text-4xl mb-24 font-semibold">
+          {toSignUp ? <>Create Account</> : <>Log In</>}
         </h1>
-        <form className=" flex flex-col p-4 gap-14">
-          <div className=" flex flex-col gap-6">
-            <label className=" flex flex-col ">
-              <span>Email</span>
+        <form className="flex flex-col w-80 p-4 gap-14">
+          <div className="flex flex-col gap-6">
+            <label className={`flex flex-col mt-6`}>
+              <div
+                className={`${
+                  emailFocus
+                    ? "text-slate-800 text-sm -translate-y-5"
+                    : "px-3 py-1 text-lg cursor-text"
+                } absolute transition-all duration-200 ease-in-out`}
+              >
+                <span>Email Address</span>
+              </div>
               <input
-                className=" bg-slate-500 px-3 py-2 rounded-md"
+                className="px-3 py-2 bg-inherit border-b border-gray-700 rounded-t-sm outline-none active:border-blue-500 transition-all duration-500 ease-in-out"
                 type="text"
                 name="email"
                 id="email"
+                onFocus={() => setEmailFocus(true)}
+                onBlur={() => setEmailFocus(false)}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 value={form.email}
               />
             </label>
-            <label className=" flex flex-col">
-              <span>Password</span>
+            <label className={`flex flex-col mt-8`}>
+              <div
+                className={`${
+                  passwordFocus
+                    ? "text-slate-800 text-sm -translate-y-5"
+                    : "px-3 py-1 text-lg cursor-text"
+                } absolute transition-all duration-300 ease-in-out`}
+              >
+                <span>Password</span>
+              </div>
               <input
-                className=" bg-slate-500 px-3 py-2 rounded-md"
+                className="px-3 py-2 bg-inherit border-b border-gray-700 rounded-t-sm outline-none active:border-blue-500 transition-all duration-500 ease-in-out"
                 type="password"
                 name="password"
                 id="password"
+                onFocus={() => setPasswordFocus(true)}
+                onBlur={() => setPasswordFocus(false)}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                 value={form.password}
               />
@@ -61,10 +115,11 @@ export default function SignInSignUp() {
           </div>
           <div>
             <input
-              className=" bg-slate-500 w-full p-3 rounded-2xl text-center cursor-pointer"
+              className="bg-blue-500 text-white hover:bg-blue-700 w-full p-3 text-center cursor-pointer"
               type="submit"
-              value={`${toSignUp ? "Sign Up" : "Sign In"}`}
+              value={`${toSignUp ? "CREATE ACCOUNT" : "LOG IN"}`}
             />
+            <Spinner size={2} />
           </div>
         </form>
       </div>

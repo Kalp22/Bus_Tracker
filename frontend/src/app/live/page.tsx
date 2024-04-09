@@ -2,9 +2,9 @@
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 
-import Spinner from "@/components/loading/spinner";
-
 const Map = dynamic(() => import("@/components/map/map"), { ssr: false });
+
+import Spinner from "@/components/loading/spinner";
 
 import "leaflet/dist/leaflet.css";
 
@@ -66,10 +66,10 @@ export default function Live() {
               2
             )}°E`
           ) : (
-            <section className="flex flex-row gap-2">
+            <div className="flex flex-row gap-2">
               <Spinner size={6} />
               <p>Loading...</p>
-            </section>
+            </div>
           )}
         </section>
       </div>
