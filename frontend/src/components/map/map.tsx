@@ -65,7 +65,7 @@ export default function Map({ location }: Props) {
     iconSize: [30, 30],
     iconAnchor: [12, 41],
     popupAnchor: [1, -32],
-    shadowSize: [31, 31],
+    shadowSize: [51, 51],
   });
 
   return (
@@ -93,7 +93,12 @@ export default function Map({ location }: Props) {
             <Popup>{stopNames[i]}</Popup>
           </Marker>
         ))}
-        <Polyline positions={busRoute} color="blue" />
+        <Polyline
+          className="opacity-70"
+          positions={busRoute}
+          color="blue"
+          pathOptions={{ weight: 5 }}
+        />
       </MapContainer>
     )
   );
