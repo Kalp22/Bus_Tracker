@@ -40,25 +40,25 @@ export default function SignInSignUp() {
           className={`h-screen object-cover rounded-${
             toSignUp ? "e" : "s"
           }-2xl`}
-          src="/map_city.jpg"
+          src="/image.jpeg"
         />
         <div
           className={`flex absolute inset-0 flex-col justify-center items-center`}
         >
-          <h2 className="text-2xl font-semibold">
+          <h2 className="text-black text-2xl font-semibold">
             {toSignUp ? "Already have an account?" : "No account?"}
           </h2>
-          <h1 className="text-4xl font-semibold">
+          <h1 className="text-black text-4xl font-semibold">
             {toSignUp ? "Log In" : "Create Account"}
           </h1>
         </div>
-        <div className="flex absolute inset-0 backdrop-filter backdrop-blur-sm justify-center items-center">
+        <div className="flex absolute inset-0 backdrop-filter backdrop-blur-[2px] justify-center items-center">
           <div className="flex flex-col justify-center items-center">
-            <h2 className="text-white text-2xl font-semibold">
+            <h2 className="text-black text-2xl font-semibold">
               {toSignUp ? "Already have an account?" : "No account?"}
             </h2>
-            <div className="h-px w-full bg-white"></div>
-            <h1 className="text-white text-4xl font-semibold">
+            <div className="h-px w-full bg-black"></div>
+            <h1 className="text-black text-4xl font-semibold">
               {toSignUp ? "Log In" : "Create Account"}
             </h1>
           </div>

@@ -19,11 +19,19 @@ interface CurrentLocation {
   longitude: number;
 }
 
-interface Props {
-  location: CurrentLocation;
+interface BusLocation {
+  dateandtime: Date;
+  id: number;
+  latitude: number;
+  longitude: number;
 }
 
-export default function Map({ location }: Props) {
+interface Props {
+  location: CurrentLocation;
+  busLocation: BusLocation;
+}
+
+export default function Map({ location, busLocation }: Props) {
   const [isMounted, setIsMounted] = useState(false);
   const [busRoute, setBusRoute] = useState<LatLngExpression[]>([]);
   const [stopNames, setStopNames] = useState<string[]>([]);
@@ -52,8 +60,8 @@ export default function Map({ location }: Props) {
   }, []);
 
   const busStop = new Icon({
-    iconUrl: "/Blue_circle.png",
-    iconSize: [17, 17],
+    iconUrl: "/bus-icon.avif",
+    iconSize: [35, 35],
     iconAnchor: [12, 41],
     popupAnchor: [1, -32],
     shadowSize: [31, 31],
@@ -88,17 +96,20 @@ export default function Map({ location }: Props) {
             <Popup>You</Popup>
           </Marker>
         )}
-        {busRouteCoordinates.map((bStop, i) => (
-          <Marker key={i} icon={busStop} position={bStop}>
-            <Popup>{stopNames[i]}</Popup>
-          </Marker>
-        ))}
-        <Polyline
+
+        <Marker
+          icon={busStop}
+          position={[busLocation.latitude, busLocation.longitude]}
+        >
+          <Popup></Popup>
+        </Marker>
+
+        {/* <Polyline
           className="opacity-70"
           positions={busRoute}
           color="blue"
           pathOptions={{ weight: 5 }}
-        />
+        /> */}
       </MapContainer>
     )
   );

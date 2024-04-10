@@ -10,9 +10,30 @@ import "leaflet/dist/leaflet.css";
 
 import { Toaster, toast } from "sonner";
 
+interface Coordinates {
+  latitude: number;
+  longitude: number;
+}
+
+interface BusLocation {
+  dateandtime: Date;
+  id: number;
+  latitude: number;
+  longitude: number;
+}
+
 export default function Live() {
-  const [location, setLocation] = useState({ latitude: 0, longitude: 0 });
-  const [toggle, setToggle] = useState(false);
+  const [location, setLocation] = useState<Coordinates>({
+    latitude: 0,
+    longitude: 0,
+  });
+  const [toggle, setToggle] = useState<boolean>(false);
+  const [busLocation, setBusLocation] = useState<BusLocation>({
+    dateandtime: new Date(), // Initial date and time
+    id: 0,
+    latitude: 0,
+    longitude: 0,
+  });
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -26,6 +47,29 @@ export default function Live() {
         toast.error("Please enable location services");
       }
     );
+  }, []);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch("http://localhost:5000/database");
+        if (!response.ok) {
+          throw new Error("Error fetching data");
+        }
+        const data = await response.json();
+        // Set busLocation to the last element of the array
+        if (data.length > 0) {
+          const lastBusLocation = data[data.length - 1];
+          console.log(lastBusLocation);
+          const dateAndTime = new Date(lastBusLocation.dateandtime);
+          setBusLocation({ ...lastBusLocation, dateandtime: dateAndTime });
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+
+    fetchData();
   }, []);
 
   const toggleBuses = () => {
@@ -58,11 +102,11 @@ export default function Live() {
           </div>
         )}
       </div>
-      <Map location={location} />
+      <Map location={location} busLocation={busLocation} />
       <div className="fixed bottom-10 left-8 rounded-lg bg-white shadow-black shadow-md p-3 z-10">
         <section className="text-xl">
-          {location.latitude && location.longitude ? (
-            `${location.latitude.toFixed(2)}°N,${location.longitude.toFixed(
+          {busLocation.latitude && busLocation.longitude ? (
+            `Bus Location: ${busLocation.latitude.toFixed(2)}°N,${busLocation.longitude.toFixed(
               2
             )}°E`
           ) : (
