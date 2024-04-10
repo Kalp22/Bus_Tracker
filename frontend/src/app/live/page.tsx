@@ -106,9 +106,9 @@ export default function Live() {
       <div className="fixed bottom-10 left-8 rounded-lg bg-white shadow-black shadow-md p-3 z-10">
         <section className="text-xl">
           {busLocation.latitude && busLocation.longitude ? (
-            `Bus Location: ${busLocation.latitude.toFixed(2)}°N,${busLocation.longitude.toFixed(
+            `Bus Location: ${busLocation.latitude.toFixed(
               2
-            )}°E`
+            )}°N,${busLocation.longitude.toFixed(2)}°E`
           ) : (
             <div className="flex flex-row gap-3">
               <Spinner size={6} color={"blue-500"} border={4} />
