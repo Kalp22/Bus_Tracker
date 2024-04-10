@@ -119,7 +119,6 @@ export default function SignInSignUp() {
               type="submit"
               value={`${toSignUp ? "CREATE ACCOUNT" : "LOG IN"}`}
             />
-            <Spinner size={2} />
           </div>
         </form>
       </div>
