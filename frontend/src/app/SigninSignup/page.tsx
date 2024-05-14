@@ -1,11 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { HTMLInputTypeAttribute, MouseEventHandler, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import Spinner from "@/components/loading/spinner";
 
 export default function SignInSignUp() {
+  const router = useRouter();
+
   const [toSignUp, settoSignUp] = useState(true);
   const [form, setForm] = useState({ email: "", password: "" });
   const [emailFocus, setEmailFocus] = useState(false);
@@ -18,6 +21,20 @@ export default function SignInSignUp() {
       settoSignUp(!toSignUp);
       setTransitioning(false);
     }, 500);
+    setForm({ email: "", password: "" });
+    setPasswordFocus(false);
+    setEmailFocus(false);
+  };
+
+  const handleAction: MouseEventHandler<HTMLInputElement> = (e) => {
+    e.preventDefault();
+    if (!toSignUp && form.email && form.password) {
+      if (form.email === "test@gmail.com" && form.password === "1234") {
+        router.push("/live");
+      }
+
+      return;
+    }
   };
 
   return (
@@ -86,7 +103,7 @@ export default function SignInSignUp() {
                 name="email"
                 id="email"
                 onFocus={() => setEmailFocus(true)}
-                onBlur={() => setEmailFocus(false)}
+                onBlur={() => (!form.email ? setEmailFocus(false) : "")}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 value={form.email}
               />
@@ -107,7 +124,7 @@ export default function SignInSignUp() {
                 name="password"
                 id="password"
                 onFocus={() => setPasswordFocus(true)}
-                onBlur={() => setPasswordFocus(false)}
+                onBlur={() => (!form.password ? setPasswordFocus(false) : "")}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                 value={form.password}
               />
@@ -118,6 +135,7 @@ export default function SignInSignUp() {
               className="bg-blue-500 text-white hover:bg-blue-700 w-full p-3 text-center cursor-pointer"
               type="submit"
               value={`${toSignUp ? "CREATE ACCOUNT" : "LOG IN"}`}
+              onClick={handleAction}
             />
           </div>
         </form>
