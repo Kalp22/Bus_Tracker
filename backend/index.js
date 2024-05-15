@@ -1,6 +1,5 @@
 const express = require("express");
 const mysql = require("mysql");
-
 const app = express();
 const port = 5000;
 
@@ -31,14 +30,13 @@ app.get("/database", (req, res) => {
         return;
       }
 
-      // Send the fetched data as JSON response
       console.log(results);
-      res.status(200).json(results);
+      res.status(200).json(results); // Send the fetched data as JSON response
     }
   );
 });
 
 // Start the Express server
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on ${port}`);
 });

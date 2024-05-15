@@ -49,8 +49,8 @@ export default function Map({ location, busLocation }: Props) {
     [21.1052, 79.1025], // Manewada Square
     // [21.1042, 79.0875], // Shatabdi Chowk
     [21.1083, 79.08], // Narendra Nagar
-    [21.10362, 79.067222], // Jaiprakash Chowk
-    [21.0959, 79.068], // Ujwal Nagar
+    [21.1043, 79.06833], // Jaiprakash Chowk
+    [21.0939, 79.0658], // Ujwal Nagar
     [21.087308, 79.064131], // Airport
     [21.080355, 79.061565], // South Airport
     [21.067448, 79.058422], // Chinch Bhawan

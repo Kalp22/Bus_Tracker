@@ -69,7 +69,7 @@ export default function SignInSignUp() {
             {toSignUp ? "Log In" : "Create Account"}
           </h1>
         </div>
-        <div className="flex absolute inset-0 backdrop-filter backdrop-blur-[2px] justify-center items-center">
+        <div className="flex absolute inset-0 backdrop-filter backdrop-blur-[4px]  justify-center items-center">
           <div className="flex flex-col justify-center items-center">
             <h2 className="text-black text-2xl font-semibold">
               {toSignUp ? "Already have an account?" : "No account?"}

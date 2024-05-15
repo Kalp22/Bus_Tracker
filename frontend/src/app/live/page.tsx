@@ -40,7 +40,7 @@ export default function Live() {
       latitude: 0,
       longitude: 0,
     },
-  ]); // [latestBusLocation, ...otherBusLocations
+  ]);
   const [toggle, setToggle] = useState<boolean>(false);
   const [busLocation, setBusLocation] = useState<BusLocation>({
     dateandtime: new Date(), // Initial date and time
@@ -50,6 +50,7 @@ export default function Live() {
   });
   const [busSpeed, setBusSpeed] = useState<number>(0);
   const [busDistance, setBusDistance] = useState<number>(0);
+  const [busTime, setBusTime] = useState<number>(0);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -78,7 +79,7 @@ export default function Live() {
           const lastBusLocation = data[1];
           setBusData(data);
           console.log(data);
-          const dateAndTime = new Date(lastBusLocation.dateandtime);
+          const dateAndTime = new Date(lastBusLocation.Timedate);
           setBusLocation({ ...lastBusLocation, dateandtime: dateAndTime });
         }
       } catch (error) {
@@ -89,83 +90,75 @@ export default function Live() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    setBusSpeed(
-      calculateSpeed(
-        location.latitude,
-        location.longitude,
-        busData[1].latitude,
-        busData[1].longitude,
-        5
-      )
-    );
-
-    setBusDistance(
-      calculateDistance(
-        location.latitude,
-        location.longitude,
-        busData[1].latitude,
-        busData[1].longitude
-      )
-    );
-  }, [busData, location.latitude, location.longitude]);
-
-  function calculateSpeed(
+  function calculateDistanceAndSpeed(
     lat1: number,
     lon1: number,
     lat2: number,
     lon2: number,
+    myLatitude: number,
+    myLongitude: number,
     timeDifferenceInSeconds: number
-  ): number {
-    // Convert latitude and longitude from degrees to radians
+  ): { distance1: number; speed: number } {
     const deg2rad = (deg: number) => deg * (Math.PI / 180);
-    const R = 6371; // Radius of the Earth in kilometers
-    const dLat = deg2rad(lat2 - lat1);
-    const dLon = deg2rad(lon2 - lon1);
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    const earthRadiusKm = 6371;
+
+    const dLat1 = deg2rad(lat2 - myLatitude);
+    const dLon1 = deg2rad(lon2 - myLongitude);
+
+    const a1 =
+      Math.sin(dLat1 / 2) * Math.sin(dLat1 / 2) +
+      Math.cos(deg2rad(myLatitude)) *
+        Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon1 / 2) *
+        Math.sin(dLon1 / 2);
+
+    const c1 = 2 * Math.atan2(Math.sqrt(a1), Math.sqrt(1 - a1));
+    const distance1 = earthRadiusKm * c1;
+
+    const dLat2 = deg2rad(lat2 - lat1);
+    const dLon2 = deg2rad(lon2 - lon1);
+    const a2 =
+      Math.sin(dLat2 / 2) * Math.sin(dLat2 / 2) +
       Math.cos(deg2rad(lat1)) *
         Math.cos(deg2rad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c; // Distance in kilometers
+        Math.sin(dLon2 / 2) *
+        Math.sin(dLon2 / 2);
+    const c2 = 2 * Math.atan2(Math.sqrt(a2), Math.sqrt(1 - a2));
+    const distance2 = earthRadiusKm * c2; // Distance in kilometers
+
+    console.log("distances: " + distance1, distance2);
 
     // Convert time difference from seconds to hours
     const timeDifferenceHours = timeDifferenceInSeconds / 3600;
+    console.log("timeDifferenceHours: " + timeDifferenceHours);
 
     // Calculate speed in kilometers per hour
-    const speed = distance / timeDifferenceHours;
+    const speed = distance2 / timeDifferenceHours;
+    console.log("speed: " + speed);
 
-    return speed;
+    return { distance1, speed };
   }
 
-  function calculateDistance(
-    lat1: number,
-    lon1: number,
-    lat2: number,
-    lon2: number
-  ): number {
-    const earthRadiusKm = 6371;
+  // Usage
+  useEffect(() => {
+    const { distance1, speed } = calculateDistanceAndSpeed(
+      busData[0].latitude,
+      busData[0].longitude,
+      busData[1].latitude,
+      busData[1].longitude,
+      location.latitude,
+      location.longitude,
+      2
+    );
 
-    const deg2rad = (deg: number) => deg * (Math.PI / 180);
-
-    const dLat = deg2rad(lat2 - lat1);
-    const dLon = deg2rad(lon2 - lon1);
-
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(deg2rad(lat1)) *
-        Math.cos(deg2rad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    const distance = earthRadiusKm * c;
-
-    return distance;
-  }
+    setBusSpeed(speed);
+    setBusDistance(distance1);
+    console.log(distance1, speed);
+    setBusTime(() => {
+      const timeinHours = distance1 / speed;
+      return timeinHours * 60;
+    });
+  }, [busData, location.latitude, location.longitude]);
 
   const toggleBuses = () => {
     setToggle(!toggle);
@@ -173,6 +166,20 @@ export default function Live() {
 
   return (
     <>
+      <div className="fixed bottom-10 right-8 rounded-lg bg-white shadow-black shadow-md p-3 z-10">
+        <section className="text-xl">
+          {location.latitude && location.longitude ? (
+            `Your Location: ${location.latitude.toFixed(
+              2
+            )}°N,${location.longitude.toFixed(2)}°E`
+          ) : (
+            <div className="flex flex-row gap-3">
+              <Spinner size={6} color={"blue-600"} border={4} />
+              <p>Loading...</p>
+            </div>
+          )}
+        </section>
+      </div>
       <div
         className={`fixed flex flex-col items-center gap-2 top-3 ${
           location.latitude && location.longitude
@@ -182,9 +189,12 @@ export default function Live() {
         onClick={toggleBuses}
       >
         <h2 className="text-xl font-bold">
-          Your Bus will reach the Stop in {busDistance / busSpeed} minutes
+          Your Bus will reach the Stop in{" "}
+          {busTime < 1 ? "Soon" : busTime.toPrecision(1) + " minutes"}{" "}
         </h2>
-        <p className="font-semibold">Your Bus is {busDistance} km away</p>
+        <p className="font-semibold">
+          Your Bus is {busDistance.toFixed(2)} km away
+        </p>
         {toggle && (
           <div className="flex flex-col w-full items-start mt-2 gap-1">
             <h2 className="text-lg font-semibold">Other Buses</h2>
