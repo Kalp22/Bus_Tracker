@@ -22,16 +22,19 @@ connection.connect();
 // Define a route to fetch data from the database
 app.get("/database", (req, res) => {
   // Execute a query to fetch data from the 'sensor_data' table
-  connection.query("SELECT * FROM sensor_data", (error, results, fields) => {
-    if (error) {
-      console.error("Error fetching data:", error);
-      res.status(500).json({ error: "Error fetching data" });
-      return;
-    }
+  connection.query(
+    "SELECT * FROM sensor_data ORDER BY timestamp DESC LIMIT 2",
+    (error, results) => {
+      if (error) {
+        console.error("Error fetching data: ", error);
+        res.status(500).json({ error: "Error fetching data" });
+        return;
+      }
 
-    // Send the fetched data as JSON response
-    res.status(200).json(results);
-  });
+      // Send the fetched data as JSON response
+      res.status(200).json(results);
+    }
+  );
 });
 
 // Start the Express server
