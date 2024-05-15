@@ -23,7 +23,7 @@ connection.connect();
 app.get("/database", (req, res) => {
   // Execute a query to fetch data from the 'sensor_data' table
   connection.query(
-    "SELECT * FROM sensor_data ORDER BY timestamp DESC LIMIT 2",
+    "SELECT * FROM sensor_data ORDER BY id DESC LIMIT 2",
     (error, results) => {
       if (error) {
         console.error("Error fetching data: ", error);
@@ -32,6 +32,7 @@ app.get("/database", (req, res) => {
       }
 
       // Send the fetched data as JSON response
+      console.log(results);
       res.status(200).json(results);
     }
   );

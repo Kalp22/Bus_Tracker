@@ -42,12 +42,13 @@ export default function Map({ location, busLocation }: Props) {
     [21.14865, 79.12], // Telephone Exchange Square
     [21.14261, 79.119707], // Gangabai Ghat Square
     [21.13836, 79.119657], // Jagnade Square
-    [21.1388, 79.1276], // Nandanwan
+    // [21.1388, 79.1276], // Nandanwan
     [21.1298, 79.1201], // Gurudev Nagar
     [21.1235, 79.1172], // Bhande Plot
     [21.123289, 79.104774], // Tukduji Putla
-    [21.1042, 79.0875], // Shatabdi Chowk
-    [21.1041, 79.0773], // Narendra Nagar
+    [21.1052, 79.1025], // Manewada Square
+    // [21.1042, 79.0875], // Shatabdi Chowk
+    [21.1083, 79.08], // Narendra Nagar
     [21.10362, 79.067222], // Jaiprakash Chowk
     [21.0959, 79.068], // Ujwal Nagar
     [21.087308, 79.064131], // Airport
@@ -67,10 +68,11 @@ export default function Map({ location, busLocation }: Props) {
     "Telephone Exchange Square",
     "Gangabai Ghat Square",
     "Jagnade Square",
-    "Nandanwan",
+    // "Nandanwan",
     "Gurudev Nagar",
     "Bhande Plot",
     "Tukduji Putla",
+    "Manewada Square",
     "Shatabdi Chowk",
     "Narendra Nagar",
     "Jaiprakash Chowk",

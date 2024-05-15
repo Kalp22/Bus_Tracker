@@ -27,6 +27,20 @@ export default function Live() {
     latitude: 0,
     longitude: 0,
   });
+  const [busData, setBusData] = useState<BusLocation[]>([
+    {
+      dateandtime: new Date(),
+      id: 0,
+      latitude: 0,
+      longitude: 0,
+    },
+    {
+      dateandtime: new Date(),
+      id: 0,
+      latitude: 0,
+      longitude: 0,
+    },
+  ]); // [latestBusLocation, ...otherBusLocations
   const [toggle, setToggle] = useState<boolean>(false);
   const [busLocation, setBusLocation] = useState<BusLocation>({
     dateandtime: new Date(), // Initial date and time
@@ -61,27 +75,9 @@ export default function Live() {
         const data = await response.json();
         // Set busLocation to the last element of the array
         if (data.length > 0) {
-          setBusSpeed(
-            calculateSpeed(
-              location.latitude,
-              location.longitude,
-              data[1].latitude,
-              data[1].longitude,
-              5
-            )
-          );
-
-          setBusDistance(
-            calculateDistance(
-              data[0].latitude,
-              data[0].longitude,
-              data[1].latitude,
-              data[1].longitude
-            )
-          );
-
           const lastBusLocation = data[1];
-          console.log(lastBusLocation);
+          setBusData(data);
+          console.log(data);
           const dateAndTime = new Date(lastBusLocation.dateandtime);
           setBusLocation({ ...lastBusLocation, dateandtime: dateAndTime });
         }
@@ -92,6 +88,27 @@ export default function Live() {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    setBusSpeed(
+      calculateSpeed(
+        location.latitude,
+        location.longitude,
+        busData[1].latitude,
+        busData[1].longitude,
+        5
+      )
+    );
+
+    setBusDistance(
+      calculateDistance(
+        location.latitude,
+        location.longitude,
+        busData[1].latitude,
+        busData[1].longitude
+      )
+    );
+  }, [busData, location.latitude, location.longitude]);
 
   function calculateSpeed(
     lat1: number,
@@ -165,9 +182,9 @@ export default function Live() {
         onClick={toggleBuses}
       >
         <h2 className="text-xl font-bold">
-          Your Bus will reach the Stop in {busDistance / busSpeed / 60} minutes
+          Your Bus will reach the Stop in {busDistance / busSpeed} minutes
         </h2>
-        <p className="font-semibold">Your Bus is {busDistance}km away</p>
+        <p className="font-semibold">Your Bus is {busDistance} km away</p>
         {toggle && (
           <div className="flex flex-col w-full items-start mt-2 gap-1">
             <h2 className="text-lg font-semibold">Other Buses</h2>
