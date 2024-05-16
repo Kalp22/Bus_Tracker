@@ -30,7 +30,7 @@ app.get("/database", (req, res) => {
         return;
       }
 
-      console.log(results);
+      console.log(results[1]);
       res.status(200).json(results); // Send the fetched data as JSON response
     }
   );

@@ -86,8 +86,10 @@ export default function Live() {
         console.error("Error:", error);
       }
     }
-
-    fetchData();
+    setInterval(() => {
+      fetchData();
+    }, 7500);
+    // fetchData();
   }, []);
 
   function calculateDistanceAndSpeed(
@@ -148,7 +150,7 @@ export default function Live() {
       busData[1].longitude,
       location.latitude,
       location.longitude,
-      2
+      7.5
     );
 
     setBusSpeed(speed);
@@ -189,8 +191,8 @@ export default function Live() {
         onClick={toggleBuses}
       >
         <h2 className="text-xl font-bold">
-          Your Bus will reach the Stop in{" "}
-          {busTime < 1 ? "Soon" : busTime.toPrecision(1) + " minutes"}{" "}
+          Your Bus will reach the Stop{" "}
+          {busTime < 1 ? "Soon" : "in " + busTime.toPrecision(1) + " minutes"}{" "}
         </h2>
         <p className="font-semibold">
           Your Bus is {busDistance.toFixed(2)} km away

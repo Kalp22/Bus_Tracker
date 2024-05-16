@@ -94,7 +94,7 @@ export default function Map({ location, busLocation }: Props) {
   }, []);
 
   const busStop = new Icon({
-    iconUrl: "/bus-icon.avif",
+    iconUrl: "/clipart2218478.png",
     iconSize: [35, 35],
     iconAnchor: [12, 41],
     popupAnchor: [1, -32],
