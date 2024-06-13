@@ -4,8 +4,6 @@ import Image from "next/image";
 import { HTMLInputTypeAttribute, MouseEventHandler, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import Spinner from "@/components/loading/spinner";
-
 export default function SignInSignUp() {
   const router = useRouter();
 
